@@ -15,6 +15,7 @@
 - Импортированы данные
 - Преобразована таблица, чтобы поменьше полей было - там много пустых
 
+```MySQL
     Use testtel;
     Alter Table systemcall Drop Index audio,  Drop Index `to`, Drop Index `from`, Drop Index `set`,
     Drop audio, Drop `to`, Drop `from`, Drop `set`, Drop anketa_id, Drop status, Drop callerid, Drop comments, Drop owner_id;
@@ -40,6 +41,8 @@
     Insert into oper (o_name) SELECT Distinct `type` As o_name FROM systemcall Where type <> '';
     Alter Table systemcall Add `oper_id` int;
     UPDATE systemcall, oper SET systemcall.oper_id=oper.o_id WHERE systemcall.type=oper.o_name;
+```
+
 
 php код
 --------------
