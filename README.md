@@ -6,12 +6,15 @@
 Все команды для sql лежат в фйле testtel.sql, здесь небольшое пояснение.
 
 - Создана база, пользователь с паролем
+
     DROP DATABASE IF EXISTS testtel;
     CREATE DATABASE testtel;
     GRANT ALL PRIVILEGES ON testtel.* TO 'teluser'@'%' IDENTIFIED BY 'telpass' WITH GRANT OPTION;
     GRANT ALL PRIVILEGES ON testtel.* TO 'teluser'@'localhost' IDENTIFIED BY 'telpass' WITH GRANT OPTION;
+
 - Импортированы данные
 - Преобразована таблица, чтобы поменьше полей было - там много пустых
+
     Use testtel;
     Alter Table systemcall Drop Index audio,  Drop Index `to`, Drop Index `from`, Drop Index `set`,
     Drop audio, Drop `to`, Drop `from`, Drop `set`, Drop anketa_id, Drop status, Drop callerid, Drop comments, Drop owner_id;
