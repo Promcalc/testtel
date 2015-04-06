@@ -7,10 +7,12 @@
 
 - Создана база, пользователь с паролем
 
+```MySQL
     DROP DATABASE IF EXISTS testtel;
     CREATE DATABASE testtel;
     GRANT ALL PRIVILEGES ON testtel.* TO 'teluser'@'%' IDENTIFIED BY 'telpass' WITH GRANT OPTION;
     GRANT ALL PRIVILEGES ON testtel.* TO 'teluser'@'localhost' IDENTIFIED BY 'telpass' WITH GRANT OPTION;
+```
 
 - Импортированы данные
 - Преобразована таблица, чтобы поменьше полей было - там много пустых
@@ -47,7 +49,6 @@
 php код
 --------------
 Для удобства отображения написана пара функций, чтобы выводить шаблоны и json.
-Непонятны ограничения на фреймворки и php 5.2.
 Для передачи на клиент использовал разбиение всего диапазона дат на 50 интервалов, чтобы не мучить клиента.
 Константа в файле index.php стоит, поменять можно.
 Подключение к базе лежит в файле dp.php - опечатался, но сейчас менять не буду, для желающих - константа в файле index.php есть.
