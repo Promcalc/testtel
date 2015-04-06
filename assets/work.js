@@ -2,6 +2,7 @@ jQuery(function($) {
     var oStartDay = $( "#Control_starttime" ),
         oFinishDay = $( "#Control_finishtime" ),
         oPlottype = $("#Control_plottype"),
+        oTable = jQuery("#tabledataarea"),
         oInfo = $("#infoarea"),
         oForm = $("#control-form");
 
@@ -34,9 +35,9 @@ jQuery(function($) {
             dataType: "json",
             data : oForm.serialize(),
             success: function(data, textStatus, jqXHR ){
-                console.log("OK: " + textStatus, data, jqXHR);
+//                console.log("OK: " + textStatus, data, jqXHR);
                 if( !'data' in data ) {
-                    oInfo.text("ERROR: no return any data");
+                    oInfo.text("ERROR: no return any data", data);
                     return;
                 }
                 if( 'error' in data ) {
@@ -44,6 +45,10 @@ jQuery(function($) {
                     return;
                 }
                 oInfo.text("OK: data length " + data.data.length);
+
+                var slegend = (('titles' in data) && ('yaxis' in data.titles)) ? " (" + data.titles.yaxis + ")" : "";
+                slegend = "Таблица значений графика" + slegend
+                oTable.text('').append("<h3>" + slegend + "</h3>");
                 plotData(data.data, ('titles' in data) ? data.titles : {});
             },
             errorfunction(jqXHR, textStatus, errorThrown) {
@@ -60,6 +65,7 @@ jQuery(function($) {
 
     oForm.trigger("submit");
 });
+
 
 
 /* *************************************************************** */
@@ -79,7 +85,8 @@ var margin = {top: 20, right: 120, bottom: 30, left: 120},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var parseDate = d3.time.format("%Y-%m-%d").parse;
+var parseDate = d3.time.format("%Y-%m-%d").parse,
+    formatDate = d3.time.format('%d.%m.%y');
 
 var x = d3.time.scale()
     .range([0, width]);
@@ -93,7 +100,7 @@ var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
     .ticks(posTimeLegend, 8)
-    .tickFormat(d3.time.format('%d.%m.%y'));
+    .tickFormat(formatDate); // d3.time.format('%d.%m.%y')
 
 var yAxis = d3.svg.axis()
     .scale(y)
@@ -113,7 +120,6 @@ var svg = d3.select("#plotdataarea").append("svg")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
-  console.log('color', data[0]);
 
   data.forEach(function(d) {
     d.date = parseDate(d.date);
@@ -123,7 +129,6 @@ var svg = d3.select("#plotdataarea").append("svg")
     return {
       name: name,
       values: data.map(function(d) {
-        // console.log(d, d[name]);
         return {date: d.date, count: +d[name]};
       })
     };
@@ -168,5 +173,33 @@ var svg = d3.select("#plotdataarea").append("svg")
       .attr("dy", ".35em")
       .style("fill", function(d) { return color(d.name); })
       .text(function(d) { return (d.name in titles) ? titles[d.name] : d.name; });
+
+  var oTable = d3.select("#tabledataarea").append("table"),
+      thead = oTable.append("thead"),
+      tbody = oTable.append("tbody");
+
+  thead.append("tr")
+      .selectAll("th")
+      .data(d3.keys(data[0]))
+      .enter()
+      .append("th")
+      .text(function(d) { return (d in titles) ? titles[d] : d; });
+
+  var rows = tbody.selectAll("tr")
+        .data(data)
+        .enter()
+        .append("tr");
+
+  var cells = rows.selectAll("td")
+        .data(function(row) {
+            return d3.keys(data[0]).map(function(fld) {
+                return {name: fld, val: (fld == "date") ? formatDate(row[fld]) : (row[fld] == 0) ? '' : row[fld]};
+            });
+        })
+        .enter()
+        .append("td")
+        .attr("class", function(d) { return (d.name == "date") ? "datecell" : "valcell"})
+        .html(function(d) { return d.val; });
 }
+
 

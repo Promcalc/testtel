@@ -14,3 +14,34 @@
   stroke: steelblue;
   stroke-width: 1.5px;
 }
+
+#tabledataarea {
+    mergin: 20px auto;
+}
+
+#tabledataarea table {
+    border-collapse: collapse;
+    border: 1px solid #000000;
+}
+
+#tabledataarea th, #tabledataarea td {
+    padding: 8px;
+    border: 1px solid #000000;
+}
+
+#tabledataarea th {
+    text-align: center;
+    padding: 8px 16px;
+}
+
+#tabledataarea td.datecell {
+    color: #777777;
+    font-weight: bold;
+    padding: 8px 16px;
+    text-align: center;
+}
+
+#tabledataarea td.valcell {
+    text-align: right;
+}
+
