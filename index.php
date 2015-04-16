@@ -415,6 +415,7 @@ function getNumbesrTime($t1, $t2) {
 		$sFields[] = 'SUM(IF(tel_id = '.$a['t_id'].', time, 0)) As val_' . $a['t_id'];
 		$aTitles['val_' . $a['t_id']] = formatPhoneNum($a['t_num']);
 	}
+	$aTitles['yaxis'] = 'Секунды';
 
 	$dt = getPlotInterval($t1, $t2);
 	$sql = 'Select ' . implode(', ', $sFields) . ',
